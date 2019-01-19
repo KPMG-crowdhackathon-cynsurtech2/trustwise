@@ -9,6 +9,8 @@ function generateCase(id, description){
     singleCase += '"><label class="form-check-label" for="';
     singleCase += id;
     singleCase += '">';
+    singleCase += id;
+    singleCase += ": ";
     singleCase += description;
     singleCase += '</label></div>';
 
