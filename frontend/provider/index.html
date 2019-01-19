@@ -76,25 +76,25 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">€</span>
                         </div>
-                        <input id="max-payout" type="number" class="form-control">
+                        <input name="max-payout" id="max-payout" type="number" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="client">Client</label>
-                    <select class="form-control" id="client">
+                    <select name="client" class="form-control" id="client">
                         <option disabled>Select a client</option>
-                        <option>Nicolas Tsagarides</option>
-                        <option>Vlad Lupashevskyi</option>
-                        <option>Georgia Kouti</option>
-                        <option>Alexandros Andreou</option>
-                        <option>John Doe</option>
+                        <option disabled>Nicolas Tsagarides</option>
+                        <option disabled>Vlad Lupashevskyi</option>
+                        <option disabled>Georgia Kouti</option>
+                        <option disabled>Alexandros Andreou</option>
+                        <option value="0xE697800ac7C996e0de1F4c0175BdB45b5D913B64">John Doe</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="expiry-date">Expiry Date</label>
-                    <input type="date" class="form-control" id="expiry-date">
+                    <input name="expiry-date" type="date" class="form-control" id="expiry-date">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit insurance plan</button>
             </form>
