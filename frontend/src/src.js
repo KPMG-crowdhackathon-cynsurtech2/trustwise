@@ -3,6 +3,25 @@ var web3 = new Web3(Web3.givenProvider || "http://192.168.24.97:8545");
 var billFactory = new web3.eth.Contract(billFactoryABI, '0xb4c79daB8f259C7Aee6E5b2Aa729821864227e84');
 var insuranceFactory = new web3.eth.Contract(insuranceFactoryABI, '0x62d69f6867A0A084C6d313943dC22023Bc263691');
 
+var insurerPk = Cookies.get("insurer-priv-key");
+var doctorPk = Cookies.get("client-priv-key");
+var clientPk = Cookies.get("doctor-priv-key")
+
+var insurerAddress = web3.eth.accounts.privateKeyToAccount(Cookies.get("insurer-priv-key")).address;
+var doctorAddress = web3.eth.accounts.privateKeyToAccount(Cookies.get("doctor-priv-key")).address;
+var clientAddress = web3.eth.accounts.privateKeyToAccount(Cookies.get("client-priv-key")).address;
+
+function testCreateInsurance() {
+    var tx = {
+        from: insurerAddress,
+        to: insuranceFactory,
+        data: insuranceFactory.methods.create().encodeABI(), //TODO: PUT THE VALUE HERE
+        value: '10000000000000', // TODO: PUT THE VALUE HERE
+        gasPrice: '0',
+        gas: '4000000'
+    }
+    web3.eth.accounts.signTransaction(tx, insurerPk).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction));
+}
 
 // TEST
 
