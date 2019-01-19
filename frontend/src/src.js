@@ -11,15 +11,17 @@ var insurerAddress = web3.eth.accounts.privateKeyToAccount(Cookies.get("insurer-
 var doctorAddress = web3.eth.accounts.privateKeyToAccount(Cookies.get("doctor-priv-key")).address;
 var clientAddress = web3.eth.accounts.privateKeyToAccount(Cookies.get("client-priv-key")).address;
 
-function testCreateInsurance() {
+function createInsurance(client, expiryDate, maxPayout, coveredCases) {
     var tx = {
         from: insurerAddress,
-        to: insuranceFactory,
-        data: insuranceFactory.methods.create().encodeABI(), //TODO: PUT THE VALUE HERE
-        value: '10000000000000', // TODO: PUT THE VALUE HERE
+        to: insuranceFactory.options.address,
+        data: insuranceFactory.methods.create(client, expiryDate, maxPayout, coveredCases).encodeABI(),
+        value: maxPayout,
         gasPrice: '0',
         gas: '4000000'
     }
+    console.log(tx);
+    
     web3.eth.accounts.signTransaction(tx, insurerPk).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction));
 }
 
@@ -38,9 +40,13 @@ var ICD_10 = [{"Code":"A06","Description":"Amebiasis"},{"Code":"A20","Descriptio
 
 //console.log(ICD_10[0].Code);
 
-function generateCase(id, description){
+function generateCase(id, description, i){
     var singleCase = '';
-    singleCase += '<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="';
+    singleCase += '<div class="form-check"><input name="';
+    singleCase += id;
+    singleCase += '" class="form-check-input" type="checkbox" value="';
+    singleCase += i;
+    singleCase += '" id="';
     singleCase += id;
     singleCase += '"><label class="form-check-label" for="';
     singleCase += id;
@@ -56,11 +62,47 @@ function generateCase(id, description){
 function populateCases(){
 
     for (let index = 1; index < ICD_10.length; index++) {
-        var rawCase = generateCase(ICD_10[index].Code, ICD_10[index].Description);
+        var rawCase = generateCase(ICD_10[index].Code, ICD_10[index].Description, index);
         $("#covered-cases").append(rawCase);
     }
 
 }
+
+$('form').submit(function( event ){
+    console.log("submitted");
+    
+    data = $(this).serializeArray();
+    var coveredCases = [];
+    var maxPayout;
+    var client;
+    var expiryDate;
+
+    data.forEach(d => {
+        switch (d.name) {
+            case "max-payout":
+                maxPayout = d.value;
+                break;
+            case "client":
+                client = d.value;
+                break;
+            case "expiry-date":
+            console.log(d.value);
+                expiryDate = (new Date(d.value)).getTime()/1000;
+                break;
+            default:
+                coveredCases.push(d.value);
+        }
+    });
+
+    console.log(client)
+    console.log(expiryDate);
+    console.log(maxPayout);
+    console.log(coveredCases);
+    
+    createInsurance(client, expiryDate, maxPayout, coveredCases);
+
+    event.preventDefault();
+});
 
 $(document).ready(function () {
     populateCases();
@@ -68,7 +110,7 @@ $(document).ready(function () {
     console.log(Cookies.get("insurer-priv-key"));
     console.log(Cookies.get("client-priv-key"));
     console.log(Cookies.get("doctor-priv-key"));
-
+    insuranceFactory.methods.getContracts().call().then(console.log)
     // web3.eth.accounts.signTransaction(tx, testPrivateKey).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction))
     // web3.eth.getBalance('0x465EF6e3e3316968792a9a448bdDa70455aAF36b').then(console.log)
 });
