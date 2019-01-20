@@ -39,6 +39,23 @@ function createBill(amountToPay, reasonCaseId, logId, patient) {
     web3.eth.accounts.signTransaction(tx, doctorPk).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction));
 }
 
+function payTheBill(amountToPay, billAddress) {
+    var tx = {
+        from: clientAddress,
+        to: billAddress,
+        value: amountToPay,
+        gasPrice: '0',
+        gas: '4000000'
+    }
+    console.log(tx);
+    
+    web3.eth.accounts.signTransaction(tx, clientPk).then((o) => {
+        web3.eth.sendSignedTransaction(o.rawTransaction).then(o => {
+            window.location.replace("/client/");
+        });
+    });
+}
+
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
@@ -240,6 +257,18 @@ $('#settlement-form').submit(function( event ){
     console.log(patient);
     
     createBill(amountToPay, reasonCaseId, logId, patient)
+
+    event.preventDefault();
+});
+
+$('#settling-form').submit(function(event){
+    console.log("submitted");
+
+    bill =  new web3.eth.Contract(billABI, getUrlParameter('sid'));
+    bill.methods.amountLeftToPay().call().then(amount => {
+        payTheBill(amount, getUrlParameter('sid'));
+    });
+
 
     event.preventDefault();
 });
