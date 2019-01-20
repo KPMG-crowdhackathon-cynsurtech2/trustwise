@@ -92,7 +92,7 @@ function generateDiagnosis(id, description, i){
     singleDiagnosis += description;
     singleDiagnosis += `</option>`;
 
-    return singleDiagnosis
+    return singleDiagnosis;
 }
 
 function populateDiagnosis(){
@@ -101,6 +101,39 @@ function populateDiagnosis(){
         var rawDiagnosis = generateDiagnosis(ICD_10[index].Code, ICD_10[index].Description, index);
         $("#diagnosis").append(rawDiagnosis);
     }
+
+}
+
+function generateSettlement(reason, amount, address){
+    // <a href="/client/settlement.html?sid=###SID###" class="d-flex justify-content-between align-items-center list-group-item list-group-item-warning">Pending<span class="badge badge-primary badge-pill">€14</span></a>
+    // <a href="/client/settlement.html?sid=###SID###" class="d-flex justify-content-between align-items-center list-group-item list-group-item-secondary">Paid</a>
+    var singleSettlement = '';
+    singleSettlement += '<a href="/client/settlement.html?sid=';
+    singleSettlement += address;
+    singleSettlement += '" class="d-flex justify-content-between align-items-center list-group-item list-group-item-';
+    singleSettlement += (amount>0 ? 'warning' : 'secondary');
+    singleSettlement += '">';
+    singleSettlement += reason;
+    singleSettlement += (amount>0 ? '<span class="badge badge-primary badge-pill">€' : '');
+    singleSettlement += (amount>0 ? amount : '');
+    singleSettlement += (amount>0 ? '</span>' : '');
+    singleSettlement += '</a>';
+
+    return singleSettlement;
+}
+
+function populateSettlements(){
+
+    billFactory.methods.getContracts().call().then(addresses => {
+        addresses.forEach(address => {
+            bill =  new web3.eth.Contract(billABI, address);
+            bill.methods.amountLeftToPay().call().then(amount => {
+                bill.methods.reasonCaseId().call().then(reason => {
+                    $("#settlements").append(generateSettlement(ICD_10[reason].Description, amount, address));
+                });
+            });
+        });
+    });
 
 }
 
@@ -180,6 +213,7 @@ $('#settlement-form').submit(function( event ){
 $(document).ready(function () {
     populateCases();
     populateDiagnosis();
+    populateSettlements();
 
     console.log(Cookies.get("insurer-priv-key"));
     console.log(Cookies.get("client-priv-key"));
