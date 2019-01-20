@@ -1,4 +1,4 @@
-var web3 = new Web3(Web3.givenProvider || "http://192.168.24.184:8545");
+var web3 = new Web3(Web3.givenProvider || "http://"+ $(location).attr('hostname') + ":8545");
 
 var billFactory = new web3.eth.Contract(billFactoryABI, '0xb4c79daB8f259C7Aee6E5b2Aa729821864227e84');
 var insuranceFactory = new web3.eth.Contract(insuranceFactoryABI, '0x62d69f6867A0A084C6d313943dC22023Bc263691');
