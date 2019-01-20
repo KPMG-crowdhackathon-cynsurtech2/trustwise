@@ -25,6 +25,20 @@ function createInsurance(client, expiryDate, maxPayout, coveredCases) {
     web3.eth.accounts.signTransaction(tx, insurerPk).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction));
 }
 
+function createBill(amountToPay, reasonCaseId, logId, patient) {
+    var tx = {
+        from: doctorAddress,
+        to: billFactory.options.address,
+        data: billFactory.methods.create(amountToPay, reasonCaseId, logId, patient).encodeABI(),
+        value: '0',
+        gasPrice: '0',
+        gas: '4000000'
+    }
+    console.log(tx);
+    
+    web3.eth.accounts.signTransaction(tx, doctorPk).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction));
+}
+
 // TEST
 
 const testPrivateKey = Cookies.get("insurer-priv-key");
@@ -68,7 +82,29 @@ function populateCases(){
 
 }
 
-$('form').submit(function( event ){
+function generateDiagnosis(id, description, i){
+    var singleDiagnosis = '';
+    singleDiagnosis += `<option value="`;
+    singleDiagnosis += i;
+    singleDiagnosis += `">`;
+    singleDiagnosis += id;
+    singleDiagnosis += `: `;
+    singleDiagnosis += description;
+    singleDiagnosis += `</option>`;
+
+    return singleDiagnosis
+}
+
+function populateDiagnosis(){
+
+    for (let index = 1; index < ICD_10.length; index++) {
+        var rawDiagnosis = generateDiagnosis(ICD_10[index].Code, ICD_10[index].Description, index);
+        $("#diagnosis").append(rawDiagnosis);
+    }
+
+}
+
+$('#insurer-form').submit(function( event ){
     console.log("submitted");
     
     data = $(this).serializeArray();
@@ -86,7 +122,6 @@ $('form').submit(function( event ){
                 client = d.value;
                 break;
             case "expiry-date":
-            console.log(d.value);
                 expiryDate = (new Date(d.value)).getTime()/1000;
                 break;
             default:
@@ -104,13 +139,55 @@ $('form').submit(function( event ){
     event.preventDefault();
 });
 
+$('#settlement-form').submit(function( event ){
+    console.log("submitted");
+    
+    data = $(this).serializeArray();
+    console.log(data);
+    
+    var amountToPay;
+    var reasonCaseId;
+    var logId;
+    var patient;
+
+    data.forEach(d => {
+        switch (d.name) {
+            case "diagnosis":
+                reasonCaseId = d.value;
+                break;
+            case "settlement":
+                amountToPay = d.value;
+                break;
+            case "patient":
+                patient = d.value;
+                break;
+            case "reference":
+                logId = d.value;
+                break;
+        }
+    });
+
+    console.log(amountToPay)
+    console.log(reasonCaseId);
+    console.log(logId);
+    console.log(patient);
+    
+    createBill(amountToPay, reasonCaseId, logId, patient)
+
+    event.preventDefault();
+});
+
 $(document).ready(function () {
     populateCases();
+    populateDiagnosis();
 
     console.log(Cookies.get("insurer-priv-key"));
     console.log(Cookies.get("client-priv-key"));
     console.log(Cookies.get("doctor-priv-key"));
-    insuranceFactory.methods.getContracts().call().then(console.log)
+
+    insuranceFactory.methods.getContracts().call().then(console.log);
+    billFactory.methods.getContracts().call().then(console.log);
+    
     // web3.eth.accounts.signTransaction(tx, testPrivateKey).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction))
     // web3.eth.getBalance('0x465EF6e3e3316968792a9a448bdDa70455aAF36b').then(console.log)
 });

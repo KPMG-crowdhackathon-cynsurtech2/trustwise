@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <style>
+        .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+            }
+        
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+                }
+            }
+    </style>
+
+    <link href="/css/styles.css" rel="stylesheet">
+
+    <title>TIN - Insurance Provider</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">TIN</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Insuree</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/provider/">Insurer</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/medical/">Medical personnel</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main">
+
+        <h1 class="display-4 text-center">Request Payment</h1>
+
+        <div class="container pb-5">
+            <form id="settlement-form">
+
+                <div class="form-group">
+                    <label for="diagnosis">Diagnosis</label>
+                    <select name="diagnosis" class="form-control" id="diagnosis">
+                        <option disabled selected>Select a diagnosis</option>
+                        <!-- <option value="###INDEX###">###ID###: ###DESCRIPTION###</option> -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="settlement">Settlement</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">€</span>
+                        </div>
+                        <input name="settlement" id="settlement" type="number" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="patient">Patient</label>
+                    <select name="patient" class="form-control" id="patient">
+                        <option disabled selected>Select a client</option>
+                        <option disabled>Nicolas Tsagarides</option>
+                        <option disabled>Vlad Lupashevskyi</option>
+                        <option disabled>Georgia Kouti</option>
+                        <option disabled>Alexandros Andreou</option>
+                        <option value="0xE697800ac7C996e0de1F4c0175BdB45b5D913B64">John Doe</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="reference">Health Record Reference</label>
+                    <select name="reference" class="form-control" id="reference">
+                        <option disabled selected>Select a reference</option>
+                        <option value="1">2017-09-29: Diag. with chronic migraines</option>
+                        <option value="2">2018-03-13: General check-up</option>
+                        <option value="3">2018-11-04: General check-up</option>
+                        <option value="4">2019-01-19: Blood-test analysis</option>
+                        <option value="5">2019-01-20: Diag. with Diphtheria</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit Payment Request</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/src/jquery-3.3.1.slim.min.js"></script>
+    <script src="/src/js.cookie-2.2.0.min.js"></script>
+    <script src="/src/popper.min.js"></script>
+    <script src="/src/bootstrap.min.js"></script>
+    <script src="/src/web3.min.js"></script>
+    <script src="/src/contracts.js"></script>
+    <script src="/src/src.js"></script>
+</body>
+
+</html>
