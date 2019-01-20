@@ -39,6 +39,36 @@ function createBill(amountToPay, reasonCaseId, logId, patient) {
     web3.eth.accounts.signTransaction(tx, doctorPk).then((o) => web3.eth.sendSignedTransaction(o.rawTransaction));
 }
 
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+function populateSettlement(address) {
+    bill =  new web3.eth.Contract(billABI, address);
+    bill.methods.amountLeftToPay().call().then(amount => {
+        $("#settlement").attr("placeholder", amount);
+    });
+    
+    bill.methods.reasonCaseId().call().then(reason => {
+        console.log(reason);
+        
+        $("#reason").attr("placeholder", ICD_10[reason].Description);
+    });
+
+    $("#record").attr("placeholder", "2019-01-20: Diag. with Diphtheria");
+}
+
 // TEST
 
 const testPrivateKey = Cookies.get("insurer-priv-key");
@@ -125,10 +155,14 @@ function generateSettlement(reason, amount, address){
 function populateSettlements(){
 
     billFactory.methods.getContracts().call().then(addresses => {
+
         addresses.forEach(address => {
-            bill =  new web3.eth.Contract(billABI, address);
-            bill.methods.amountLeftToPay().call().then(amount => {
-                bill.methods.reasonCaseId().call().then(reason => {
+            console.log(address);
+            
+            var bill =  new web3.eth.Contract(billABI, address);
+            bill.methods.reasonCaseId().call().then(reason => {
+                bill.methods.amountLeftToPay().call().then(amount => {
+                    console.log("reason", reason);
                     $("#settlements").append(generateSettlement(ICD_10[reason].Description, amount, address));
                 });
             });
@@ -214,6 +248,8 @@ $(document).ready(function () {
     populateCases();
     populateDiagnosis();
     populateSettlements();
+
+    populateSettlement(getUrlParameter('sid'));
 
     console.log(Cookies.get("insurer-priv-key"));
     console.log(Cookies.get("client-priv-key"));

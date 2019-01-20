@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <style>
+        .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+            }
+        
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+                }
+            }
+    </style>
+
+    <link href="/css/styles.css" rel="stylesheet">
+
+    <title>TIN - Settlement</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">TIN</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/client/">Insuree</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/provider/">Insurer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/medical/">Medical personnel</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main">
+
+        <h1 class="display-4 text-center">Settlement</h1>
+
+        <div class="container pb-5">
+            
+            <form>
+                
+                <div class="form-group">
+                    <label for="reason">Reason</label>
+                    <input type="text" class="form-control" id="reason" readonly placeholder="">
+                </div>
+                
+                <div class="form-group">
+                    <label for="settlement">Settlement</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">€</span>
+                        </div>
+                        <input name="settlement" id="settlement" type="text" class="form-control" readonly placeholder="">
+                    </div>
+                </div>
+                
+                
+                <div class="form-group">
+                    <label for="reason">Medical Record Entry</label>
+                    <input type="text" class="form-control" id="record" readonly placeholder="">
+                </div>
+                
+                <div class="jumbotron border border-success">
+                    <div class="alert alert-success" role="alert">This settlement <span class="font-weight-bold">CAN</span> be handled by your insurance provider!</div>
+                    <div class="container">
+                        <div class="row "></div>
+                        <button type="button" class="btn btn-secondary btn-block">Pay to settle</button>
+                        <button type="button" class="btn btn-primary btn-block">Let insurance provider settle</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/src/jquery-3.3.1.slim.min.js"></script>
+    <script src="/src/js.cookie-2.2.0.min.js"></script>
+    <script src="/src/popper.min.js"></script>
+    <script src="/src/bootstrap.min.js"></script>
+    <script src="/src/web3.min.js"></script>
+    <script src="/src/contracts.js"></script>
+    <script src="/src/src.js"></script>
+</body>
+
+</html>
